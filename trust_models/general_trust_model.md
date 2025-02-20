@@ -8,6 +8,8 @@ We call this a "generalized trust model" because it describes the common charact
 
 ## 1. Participants and Boundaries
 
+![self-attestation-roles](https://github.com/user-attachments/assets/16932727-1965-4719-8a25-426d1711a869)
+
 ### 1.1 Credential Issuer (Identity Authority) – Outside Protocol Boundary
 - **Role:** The issuer digitally signs and issues credentials that attest to an individual's identity.
 - **Trust Basis:**
