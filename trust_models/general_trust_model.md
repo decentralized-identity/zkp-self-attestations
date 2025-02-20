@@ -12,11 +12,7 @@ We call this a "generalized trust model" because it describes the common charact
 
 ### 1.1 Credential Issuer (Identity Authority) – Outside Protocol Boundary
 - **Role:** The issuer digitally signs and issues credentials that attest to an individual's identity.
-- **Trust Basis:**
-    - Relies on secure key management (e.g., RSA or equivalent), reliable public key distribution (via trusted registries or PKI), proper key rotation, and robust digital signing methods.
-    - Additional considerations, depending on Verifier requirements:
-      - Established reputation and compliance with relevant regulatory frameworks
-      - Adherence to periodic audits and certification requirements
+- **Trust Basis:** Relies on secure key management (e.g., RSA or equivalent), reliable public key distribution (via trusted registries or PKI), proper key rotation, and robust digital signing methods. Also includes verifier-specific considerations, such as isser reputation or regulatory compliance.
 - **Assumption:** The underlying issuing infrastructure ensures the issuer's signatures are genuine, that the public key distribution remains uncompromised, and that accurate records of issued and revoked credentials are kept.
 
 *Note:* Although the signing and issuance process occurs outside the protocol boundary, the design of the protocol is informed by these processes.
@@ -50,6 +46,9 @@ We call this a "generalized trust model" because it describes the common charact
   * The digital signing process is performed correctly, ensuring the signature authentically represents the credential.
   * The issuer follows proper identity verification procedures before credential issuance
   * The issuer maintains accurate records of issued and revoked credentials.
+  * Additional considerations, depending on Verifier requirements:
+    - Established reputation and compliance with relevant regulatory frameworks
+    - Adherence to periodic audits and certification requirements
 
 - **User/Prover Assumptions:**  
   * The client device environment is secure against malware and side-channel attacks that might compromise, tamper with, or leak secret inputs.
