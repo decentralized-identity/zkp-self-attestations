@@ -71,9 +71,10 @@ The verifier may require addition verification methods (e.g., checking attribute
 - **User Device Installation:** The user installs a protocol-conformant application capable of generating zero-knowledge proofs from issued credentials.
 
 ### 4.2 Maintenance
-- **Signed Data Freshness:** The protocol integrates a mechanism -- such as an embedded timestamp, nonce, or a freshness value obtained from a trusted endpoint -- to ensure that each zero-knowledge proof reflects a recent authentication event. For instance, in an Anon Aadhaar implementation, a dedicated freshness endpoint provides up-to-date data that must be included in the ZKP. This mechanism prevents replay attacks.
+- **Signed Data Freshness:** The protocol integrates a mechanism -- such as an embedded timestamp, nonce, or a freshness value obtained from a trusted endpoint -- to ensure that each zero-knowledge proof reflects a recent authentication event. For instance, in an Anon Aadhaar implementation, a dedicated freshness endpoint provides up-to-date data that must be included in the ZKP.
 - **Key and Credential Management:** Ongoing procedures (like regular key rotations and credential revocations) ensure that any compromised keys or outdated credentials are promptly invalidated.
 
 ### 4.3 Termination
-- **Credential Revocation:** If an issuer's key is compromised or a user’s device is deemed insecure, the corresponding credential is revoked. The data freshness window provides an upper bound for usage of a ZKP self-attestation post-revocation.
+- **Invalid Issuer Key:** If an issuer's key is compromised, expires, or is not consistent with the user's credential, the protocol will not generate a proof. The data freshness window provides an upper bound for usage of previously-generated ZKP self-attestations.
+- **Credential Expiration and Revocation:** The issuer is responsible for revoking issued credentials, ensuring discovery of revocation lists, and ensuring availability of credential expiration metadata. If the user's credential is revoked or expired, the protocol will not generate a proof. The data freshness window provides an upper bound for usage of previously-issed ZKP self-attestations.
 - **Proof Invalidation:** Any proofs that are stale (i.e., those with freshness data outside the allowed window) or replayed (as detected by the nonce) are rejected by the verifier.
