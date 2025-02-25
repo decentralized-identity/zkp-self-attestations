@@ -86,8 +86,63 @@ It is not assumed that Verifiers will:
    - Handling of Aadhaar photo changes
    - Procedures for refreshing nullifiers
    - Management of invalid nullifier lists
+  
+## 6. Example Implementations
+
+### Anon Aadhaar: Selective Disclosure Atop Government-Issued IDs  
+
+#### Workflow  
+
+**Inputs**:
+- `nullifierSeed` from Verifier (for application scoping)
+- UIDAI-signed QR code (e-Aadhaar PDF/mAadhaar app) containing user identity data
+
+**Proof Flow**:
+1. User scans QR code
+2. Prover verifies and generates proof
+    - Extracts signed data bytes and RSA signature
+    - Verifies signature on signed data and authenticates signing key against UIDAI's RSA public key from [governance endpoint](https://uidai.gov.in/publickey)
+    - Generates `nullifier`, a function of `nullifierSeed`, photo bytes, and identity data fields (to prevent reuse).
+    - Converts timestamp on signed data to UNIX UTC to include in output
+   - Optionally reveals age >18, gender, state, or pincode.  
+3. Proof Submission 
+   - Submits proof, nullifier, timestamp, and public inputs to verifier.
+  
+![Untitled diagram-2025-02-25-000302](https://github.com/user-attachments/assets/c904fa60-c683-4e30-9af3-88aa71df86a3)
+
+**Details on Role of Timestamp and Nullifiers**
+Anon Aadhaar mitigates specific threats as follows:
+
+1. Proof Freshness: Timestamp from Aadhaar QR Code
+   - The UIDAI-signed timestamp in the QR code ensures the Aadhaar data is recent (e.g., ≤30 days old).  
+   - Verifiers enforce validity windows (e.g., reject proofs with timestamps older than 30 days).  
+2. Prevent Proof Relay and Cross-Verifier Correlation: Nullifier and Nullifier Seed
+   - Verifier-specific `nullifierSeed` ensures unique `nullifier = SHA-256(nullifierSeed || photoBytes)`.  
+       - Reused proofs are detected/rejected by checking nullifier registry  
+   -  Unique `nullifierSeed` per verifier ensures distinct nullifiers for the same user across apps; prevents tracking users across services (e.g., healthcare vs. finance apps).  
+ 
+### OpenPassport: NFC-Based Identity Verification Without Live Issuer Endpoints
+OpenPassport verifies electronic passports’ NFC chip data. Unlike Aadhaar’s UIDAI endpoint, passports lack live issuer APIs, necessitating alternative freshness mechanisms.
+
+#### Workflow
+- User scans passport’s NFC chip, extracting signed datagroups (name, DOB, nationality) and the issuing authority’s RSA public key.
+- The ZKP circuit:
+    - Checks passport signature validity using the country’s public key (from ICAO’s registry).
+    - Selectively disclosures user-selected attributes (e.g., nationality, age)
+    - Nullifier: Generated from immutable fields (DOB, passport number) to link proofs across sessions:
+     - User Nullifier: Session-specific hash (e.g., random nonce) for one-time use11.
+
+**Freshness Enforcement**:
+- Passport Issuance Date: Circuits reject proofs from passports issued >10 years ago.
+- On-Chain Revocation: Integrates with Ethereum’s ERC-948 registries to check revocation status
+
+**Threat Mitigation**:
+- ZKP verifies RSA signatures against ICAO’s public key registry; revoked keys are excluded via governance votes.
+- Verifier-specific salts (e.g., per-verifier nonces) prevent correlation across verifiers
+- On-chain revocation checks and issuance-date filters compensate for lack of live issuer endpoints.
 
 ## References
 
 1. [Anon Aadhaar Specification](https://github.com/zkspecs/zkspecs/blob/main/specs/2/README.md)
-2. [Aadhaar Secure QR Code](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/qr-code-reader.html)
+2. [Anon Aadhaar - How does it work](https://documentation.anon-aadhaar.pse.dev/docs/how-does-it-work)
+3. [Aadhaar Secure QR Code](https://uidai.gov.in/en/ecosystem/authentication-devices-documents/qr-code-reader.html)
