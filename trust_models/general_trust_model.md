@@ -98,3 +98,22 @@ The verifier may require addition verification methods (e.g., checking attribute
 - **Proof Invalidation:** Any proofs that are stale (i.e., those with freshness data outside the allowed window) or replayed (as detected by the nonce) are rejected by the verifier.
 
 
+## Appendix: Threats Unique to ZKP self-attestation
+
+[W3C Decentralized Identities Threat Model](https://github.com/w3c-cg/threat-modeling/blob/main/models/decentralized-identities.md) provides a general threat model for decentralized identity architectures. 
+
+### Issuer–User Boundary
+- The threat model is simplified when the issuer provides an authenticated mechanism for the user to obtain fresh signed data, with timestamp / freshness enforcement by the verifier
+- Otherwise, the protocol must ensure some other mechanism (TODO: complete)
+
+### User–Verifier Boundary
+- **Potential Attack Vectors:**
+  - Colluding user threats
+  - Compromised client devices
+  - Time manipulation attacks
+  - Side-channel attacks on proof generation
+
+### Mathematical and Implementation Trust
+- **Potential Attack Vectors:**
+  - Implementation vulnerabilities in ZKP libraries
+  - Side-channel attacks on verification implementation
