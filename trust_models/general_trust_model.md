@@ -79,3 +79,11 @@ The verifier may require addition verification methods (e.g., checking attribute
 - **Invalid Issuer Key:** If an issuer's key is compromised, expires, or is not consistent with the user's credential, the protocol will not generate a proof. The data freshness window provides an upper bound for usage of previously-generated ZKP self-attestations.
 - **Credential Expiration and Revocation:** The issuer is responsible for revoking issued credentials, ensuring discovery of revocation lists, and ensuring availability of credential expiration metadata. If the user's credential is revoked or expired, the protocol will not generate a proof. The data freshness window provides an upper bound for usage of previously-issed ZKP self-attestations.
 - **Proof Invalidation:** Any proofs that are stale (i.e., those with freshness data outside the allowed window) or replayed (as detected by the nonce) are rejected by the verifier.
+
+## 5. Use Cases
+
+- Authentication: Privacy-preserving login from a trusted credential.
+- Sybil Resistance: Proves a user is unique without revealing identity.
+- Proof of Age Range: Verifies “over 18” (etc.) without sharing full DOB.
+- Proof of Country: Shows region compliance with minimal data.
+- Wallet Infrastructure: Validate transactions and/or recover your wallet with ID proof.
