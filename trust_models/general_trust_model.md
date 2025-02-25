@@ -94,26 +94,17 @@ The verifier may require addition verification methods (e.g., checking attribute
 
 ### 4.3 Termination
 - **Invalid Issuer Key:** If an issuer's key is compromised, expires, or is not consistent with the user's credential, the protocol will not generate a proof. The data freshness window provides an upper bound for usage of previously-generated ZKP self-attestations.
-- **Credential Expiration and Revocation:** The issuer is responsible for revoking issued credentials, ensuring discovery of revocation lists, and ensuring availability of credential expiration metadata. If the user's credential is revoked or expired, the protocol will not generate a proof. The data freshness window provides an upper bound for usage of previously-issed ZKP self-attestations.
+- **Credential Expiration and Revocation:** The issuer is responsible for revoking issued credentials, ensuring discovery of revocation lists, and ensuring availability of credential expiration metadata. If the user's credential is revoked or expired, the protocol will not generate a proof. The data freshness window provides an upper bound for usage of previously-issued ZKP self-attestations.
 - **Proof Invalidation:** Any proofs that are stale (i.e., those with freshness data outside the allowed window) or replayed (as detected by the nonce) are rejected by the verifier.
 
 
-## Appendix: Threats Unique to ZKP self-attestation
+## Appendix: ZKP Self-Attestation Threat Model Considerations
+The threat model for these protocols are similar to that of [W3C Decentralized Identities Threat Model](https://github.com/w3c-cg/threat-modeling/blob/main/models/decentralized-identities.md) -- a general threat model for decentralized identity architectures. ZKP Self-Attestation implementations should consider:
 
-[W3C Decentralized Identities Threat Model](https://github.com/w3c-cg/threat-modeling/blob/main/models/decentralized-identities.md) provides a general threat model for decentralized identity architectures. 
+- Linkability (c.f. LINDDUN Threats)
+    - Persistent Pseudonymity if implemented off-chain with verifier-provided `nullifierSeed`
+    - On-chain implementations should consider impact.
+- Colluding user threats (c.f. "A malicious Holder who wants to get what he is not entitled to from the verifier.")
+    - Because these proofs are generated outside the usual 3-party decentralized identity model, mechanisms for ensuring holder binding may differ with selectively disclosed attributes.
+    - Mitigations include signed data freshness, attribute disclosure, biometrics, and scarcity. 
 
-### Issuer–User Boundary
-- The threat model is simplified when the issuer provides an authenticated mechanism for the user to obtain fresh signed data, with timestamp / freshness enforcement by the verifier
-- Otherwise, the protocol must ensure some other mechanism (TODO: complete)
-
-### User–Verifier Boundary
-- **Potential Attack Vectors:**
-  - Colluding user threats
-  - Compromised client devices
-  - Time manipulation attacks
-  - Side-channel attacks on proof generation
-
-### Mathematical and Implementation Trust
-- **Potential Attack Vectors:**
-  - Implementation vulnerabilities in ZKP libraries
-  - Side-channel attacks on verification implementation
