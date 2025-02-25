@@ -103,7 +103,7 @@ The threat model for these protocols are similar to that of [W3C Decentralized I
 
 - Linkability (c.f. LINDDUN Threats)
     - Persistent Pseudonymity if implemented off-chain with verifier-provided `nullifierSeed`
-    - On-chain implementations should consider impact.
+    - On-chain implementations should consider impact. Mitigations may include anonymity sets via solutions like Semaphore
 - Colluding user threats (c.f. "A malicious Holder who wants to get what he is not entitled to from the verifier.")
     - Because these proofs are generated outside the usual 3-party decentralized identity model, mechanisms for ensuring holder binding may differ with selectively disclosed attributes.
     - Mitigations include signed data freshness, attribute disclosure, biometrics, and scarcity. 
