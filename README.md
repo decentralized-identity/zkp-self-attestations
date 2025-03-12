@@ -7,14 +7,7 @@ Repository for [DIF Crypto WG](https://github.com/decentralized-identity/crypto-
 ## Drafts
 
 - [Anon Aadhaar Trust Model](./trust_models/anon-aadhaar.md)
-
-## Remaining Repo Template TODO
-
-- Update content in AGENDA.md and [set up hackmd integration](https://hackmd.io/s/link-with-github)
-  - Make sure you add the hackmd badge to the AGENDA.md file
-- Update CONTRIBUTING.md with any group-specific processes
-- Update the README (all content and links in this file)
-- Update github repo settings, including tags
+- [General Trust Model](./trust_models/general_trust_model.md)
 
 ## [Latest Editor's Draft](https://identity.foundation/zkp-self-attestations/)
 
