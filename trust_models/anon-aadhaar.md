@@ -96,6 +96,7 @@ It is not assumed that Verifiers will:
 **Inputs**:
 - `nullifierSeed` from Verifier (for application scoping)
 - UIDAI-signed QR code (e-Aadhaar PDF/mAadhaar app) containing user identity data
+- UIDAI Public Key
 
 **Proof Flow**:
 1. User scans QR code
@@ -117,7 +118,7 @@ Anon Aadhaar mitigates specific threats as follows:
    - The UIDAI-signed timestamp in the QR code ensures the Aadhaar data is recent (e.g., ≤30 days old).  
    - Verifiers enforce validity windows (e.g., reject proofs with timestamps older than 30 days).  
 2. Prevent Proof Relay and Cross-Verifier Correlation: Nullifier and Nullifier Seed
-   - Verifier-specific `nullifierSeed` ensures unique `nullifier = SHA-256(nullifierSeed || photoBytes)`.  
+   - Verifier-specific `nullifierSeed` ensures unique `nullifier = hash(nullifierSeed || photoBytes)`.  
        - Reused proofs are detected/rejected by checking nullifier registry  
    -  Unique `nullifierSeed` per verifier ensures distinct nullifiers for the same user across apps; prevents tracking users across services (e.g., healthcare vs. finance apps).  
  
