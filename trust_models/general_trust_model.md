@@ -104,6 +104,61 @@ The verifier may require addition verification methods (e.g., checking attribute
 - Proof of Country: Shows region compliance with minimal data.
 - Wallet Infrastructure: Validate transactions and/or recover your wallet with ID proof.
 
+## 6. Example Implementations
+
+### Anon Aadhaar: Selective Disclosure Atop Government-Issued IDs  
+
+#### Workflow  
+
+**Inputs**:
+- `nullifierSeed` from Verifier (for application scoping)
+- UIDAI-signed QR code (e-Aadhaar PDF/mAadhaar app) containing user identity data
+- UIDAI Public Key
+
+**Proof Flow**:
+1. User scans QR code
+2. Prover verifies and generates proof
+    - Extracts signed data bytes and RSA signature
+    - Verifies signature on signed data and authenticates signing key against UIDAI's RSA public key from [governance endpoint](https://uidai.gov.in/publickey)
+    - Generates `nullifier`, a function of `nullifierSeed`, photo bytes, and identity data fields (to prevent reuse).
+    - Converts timestamp on signed data to UNIX UTC to include in output
+   - Optionally reveals age >18, gender, state, or pincode.  
+3. Proof Submission 
+   - Submits proof, nullifier, timestamp, and public inputs to verifier.
+  
+![Untitled diagram-2025-02-25-000302](https://github.com/user-attachments/assets/c904fa60-c683-4e30-9af3-88aa71df86a3)
+
+**Details on Role of Timestamp and Nullifiers**
+Anon Aadhaar mitigates specific threats as follows:
+
+1. Proof Freshness: Timestamp from Aadhaar QR Code
+   - The UIDAI-signed timestamp in the QR code ensures the Aadhaar data is recent (e.g., ≤30 days old).  
+   - Verifiers enforce validity windows (e.g., reject proofs with timestamps older than 30 days).  
+2. Prevent Proof Relay and Cross-Verifier Correlation: Nullifier and Nullifier Seed
+   - Verifier-specific `nullifierSeed` ensures unique `nullifier = hash(nullifierSeed || photoBytes)`.  
+       - Reused proofs are detected/rejected by checking nullifier registry  
+   -  Unique `nullifierSeed` per verifier ensures distinct nullifiers for the same user across apps; prevents tracking users across services (e.g., healthcare vs. finance apps).  
+ 
+### OpenPassport: NFC-Based Identity Verification Without Live Issuer Endpoints
+OpenPassport verifies electronic passports’ NFC chip data. Unlike Aadhaar’s UIDAI endpoint, passports lack live issuer APIs, necessitating alternative freshness mechanisms.
+
+#### Workflow
+- User scans passport’s NFC chip, extracting signed datagroups (name, DOB, nationality) and the issuing authority’s RSA public key.
+- The ZKP circuit:
+    - Checks passport signature validity using the country’s public key (from ICAO’s registry).
+    - Selectively disclosures user-selected attributes (e.g., nationality, age)
+    - Nullifier: Generated from immutable fields (DOB, passport number) to link proofs across sessions:
+     - User Nullifier: Session-specific hash (e.g., random nonce) for one-time use11.
+
+**Freshness Enforcement**:
+- Passport Issuance Date: Circuits reject proofs from passports issued >10 years ago.
+- On-Chain Revocation: Integrates with Ethereum’s ERC-948 registries to check revocation status
+
+**Threat Mitigation**:
+- ZKP verifies RSA signatures against ICAO’s public key registry; revoked keys are excluded via governance votes.
+- Verifier-specific salts (e.g., per-verifier nonces) prevent correlation across verifiers
+- On-chain revocation checks and issuance-date filters compensate for lack of live issuer endpoints.
+
 ## Appendix: ZKP Self-Attestation Threat Model Considerations
 The threat model for these protocols are similar to that of [W3C Decentralized Identities Threat Model](https://github.com/w3c-cg/threat-modeling/blob/main/models/decentralized-identities.md) -- a general threat model for decentralized identity architectures. ZKP Self-Attestation implementations should consider:
 
