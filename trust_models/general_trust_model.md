@@ -104,7 +104,7 @@ The verifier may require addition verification methods (e.g., checking attribute
 - Proof of Country: Shows region compliance with minimal data.
 - Wallet Infrastructure: Validate transactions and/or recover your wallet with ID proof.
 
-## 6. Example Implementations
+## 6. Detailed Examples
 
 ### Anon Aadhaar: Selective Disclosure Atop Government-Issued IDs  
 
@@ -158,6 +158,13 @@ OpenPassport verifies electronic passports’ NFC chip data. Unlike Aadhaar’s 
 - ZKP verifies RSA signatures against ICAO’s public key registry; revoked keys are excluded via governance votes.
 - Verifier-specific salts (e.g., per-verifier nonces) prevent correlation across verifiers
 - On-chain revocation checks and issuance-date filters compensate for lack of live issuer endpoints.
+
+## 7. Implementations
+
+- Privado ID / Billions Network - https://billions.network/
+- Rarimo - https://rarimo.com/
+- Self Protocol - https://self.xyz/
+- ZkPassport - https://zkpassport.id/
 
 ## Appendix: ZKP Self-Attestation Threat Model Considerations
 The threat model for these protocols are similar to that of [W3C Decentralized Identities Threat Model](https://github.com/w3c-cg/threat-modeling/blob/main/models/decentralized-identities.md) -- a general threat model for decentralized identity architectures. ZKP Self-Attestation implementations should consider:
